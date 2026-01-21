@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💌 专属暖心提示全辑</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "微软雅黑", sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: bgFlow 20s ease infinite;
+            background-size: 200% 200%;
+        }
+        @keyframes bgFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .start-btn {
+            background: #ff6f61;
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            border-radius: 40px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            width: 90%;
+            max-width: 400px;
+        }
+        .start-btn:hover {
+            background: #ff5a5a;
+            transform: scale(1.03);
+        }
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            backdrop-filter: blur(5px);
+        }
+        .popup-content {
+            background: white;
+            padding: 40px 25px;
+            border-radius: 25px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            animation: popupAnime 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        @keyframes popupAnime {
+            0% { transform: scale(0.7) rotate(-5deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0); opacity: 1; }
+        }
+        .tip-text {
+            color: #667eea;
+            font-size: 22px;
+            margin: 25px 0;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: tipFade 0.4s ease forwards;
+        }
+        @keyframes tipFade {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .page-info {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .nav-btn, .ctrl-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .nav-btn {
+            background: #e0e0e0;
+            color: #333;
+        }
+        .nav-btn:hover {
+            background: #bdbdbd;
+        }
+        .ctrl-btn {
+            background: #667eea;
+            color: white;
+        }
+        .ctrl-btn:hover {
+            background: #556cd6;
+        }
+        .complete-box {
+            color: #4caf50;
+            padding: 20px 0;
+        }
+        .complete-text {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        .complete-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <button class="start-btn" onclick="startAllTip()">🎁 点击接收暖心提示全辑</button>
+    <div class="popup" id="tipPopup">
+        <div class="popup-content">
+            <h2>💌 暖心小美好</h2>
+            <div class="page-info" id="pageInfo">1/16</div>
+            <div class="tip-text" id="tipText"></div>
+            <div class="btn-group" id="funcBtn">
+                <button class="nav-btn" onclick="prevTip()">← 上一条</button>
+                <button class="nav-btn" onclick="nextTip()">下一条 →</button>
+            </div>
+            <div class="complete-box" id="completeBox" style="display: none;">
+                <div class="complete-icon">✨🥳✨</div>
+                <div class="complete-text">所有暖心提示已送达！</div>
+                <button class="ctrl-btn" onclick="closePopup()">收藏美好 ✨</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 核心配置：1.5秒自动切 + 稳定音乐外链（亲测手机/微信可用）
+        const TIP_INTERVAL = 1500;
+        const MUSIC_URL = 'https://cdn.jsdelivr.net/gh/ixiaowang123/StaticResource@main/music/soft-piano.mp3';
+        // 暖心提示库
+        const tips = [
+            "多喝水哦~ 🧊",
+            "保持微笑呀 😊",
+            "今天也要元气满满哦 💪",
+            "记得吃水果~ 🍎",
+            "保持好心情 ✨",
+            "好好爱自己 ❤️",
+            "我想你了 🥺",
+            "梦想成真 🎯",
+            "期待下一次见面 🤗",
+            "前程似锦 🚀",
+            "前路灿灿 🌟",
+            "早点休息 😴",
+            "愿所有烦恼都消失 🧹",
+            "别熬夜 🛌",
+            "今天过得开心嘛 🥰",
+            "天冷了，多穿衣服 🧥"
+        ];
+
+        let currentIndex = 0;
+        let autoTimer = null;
+        let bgMusic = null;
+        // 获取DOM元素
+        const popup = document.getElementById('tipPopup');
+        const tipText = document.getElementById('tipText');
+        const pageInfo = document.getElementById('pageInfo');
+        const funcBtn = document.getElementById('funcBtn');
+        const completeBox = document.getElementById('completeBox');
+
+        // 初始化音乐（强制触发播放，兼容所有浏览器）
+        function initMusic() {
+            bgMusic = new Audio(MUSIC_URL);
+            bgMusic.loop = true; // 循环播放
+            bgMusic.volume = 0.4; // 适度音量，不扰民
+            // 强制播放处理，解决浏览器拦截
+            bgMusic.play().catch(err => {
+                // 备用播放方案，确保音乐能响
+                const playEvent = () => {
+                    bgMusic.play();
+                    document.removeEventListener('touchstart', playEvent);
+                    document.removeEventListener('click', playEvent);
+                };
+                document.addEventListener('touchstart', playEvent);
+                document.addEventListener('click', playEvent);
+            });
+        }
+
+        // 开启1.5秒自动切换
+        function startAutoPlay() {
+            clearAutoPlay();
+            autoTimer = setInterval(() => {
+                if (currentIndex < tips.length - 1) {
+                    currentIndex++;
+                    showCurrentTip();
+                }
+            }, TIP_INTERVAL);
+        }
+
+        // 清除自动切换
+        function clearAutoPlay() {
+            if (autoTimer) clearInterval(autoTimer);
+        }
+
+        // 显示当前提示（带淡入动画）
+        function showCurrentTip() {
+            tipText.textContent = tips[currentIndex];
+            pageInfo.textContent = `${currentIndex+1}/${tips.length}`;
+            // 最后一条停止自动切，显示完成提示
+            if (currentIndex === tips.length - 1) {
+                clearAutoPlay();
+                funcBtn.style.display = 'none';
+                completeBox.style.display = 'block';
+            } else {
+                funcBtn.style.display = 'flex';
+                completeBox.style.display = 'none';
+                startAutoPlay();
+            }
+        }
+
+        // 上/下一条手动切换（切完继续1.5秒自动播）
+        function prevTip() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                showCurrentTip();
+            }
+        }
+        function nextTip() {
+            if (currentIndex < tips.length - 1) {
+                currentIndex++;
+                showCurrentTip();
+            }
+        }
+
+        // 开始所有提示（用户点击触发，无拦截）
+        function startAllTip() {
+            currentIndex = 0;
+            initMusic(); // 初始化并播放音乐
+            popup.style.display = 'flex';
+            showCurrentTip();
+        }
+
+        // 关闭弹窗（暂停音乐）
+        function closePopup() {
+            popup.style.display = 'none';
+            clearAutoPlay();
+            if (bgMusic) bgMusic.pause();
+        }
+
+        // 预加载音乐，提升播放体验
+        window.onload = function() {
+            bgMusic = new Audio(MUSIC_URL);
+            bgMusic.volume = 0.4;
+        };
+    </script>
+</body>
+</html>
