@@ -1,0 +1,44 @@
+.work-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.work-img {
+    width: 100;
+    height: auto;
+}
+
+.work-grid {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav-links a {
+    color: rgb(160, 28, 92);
+}
+
+.logo {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 3rem;
+    text-align: center;
+    color: rgb(214, 135, 32);
+}
+
+body {
+    background-color: rgba(229, 255, 0, 0.034);
+}
+
+.hero-content {
+    text-align: center;
+}
+
+.work-title {
+    color: rgb(43, 0, 255);
+}
